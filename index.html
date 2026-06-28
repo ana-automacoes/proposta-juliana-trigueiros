@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposta | Juliana Trigueiros — Ana | Automações e IA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&family=Reenie+Beanie&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        base: '#1f1f23',
+                        'base-card': '#27273a',
+                        'base-card2': '#2e2250',
+                        purple: '#5a28b9',
+                        'purple-mid': '#ac78ed',
+                        'purple-light': '#ded2ff',
+                        offwhite: '#eeeeee',
+                        snow: '#fefefe',
+                    },
+                    fontFamily: {
+                        serif: ['DM Serif Display', 'Georgia', 'serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        hand: ['Reenie Beanie', 'cursive'],
+                    },
+                    borderRadius: {
+                        'organic': '40px',
+                        'organic-lg': '64px',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.18;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 200px 200px;
+        }
+        html { scroll-behavior: smooth; }
+        body {
+            background-color: #1f1f23;
+            color: #fefefe;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        .label-ui {
+            font-family: 'Inter', sans-serif;
+            font-size: 10px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.25em;
+        }
+        .label-ui-lg {
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+        }
+        .hand-underline { position: relative; display: inline-block; }
+        .hand-underline svg { position: absolute; bottom: -8px; left: -4px; width: calc(100% + 8px); height: 14px; }
+        .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .reveal-children > * { opacity: 0; transform: translateY(20px); transition: opacity 0.7s ease-out, transform 0.7s ease-out; }
+        .reveal-children.visible > *:nth-child(1) { transition-delay: 0s; opacity: 1; transform: translateY(0); }
+        .reveal-children.visible > *:nth-child(2) { transition-delay: 0.1s; opacity: 1; transform: translateY(0); }
+        .reveal-children.visible > *:nth-child(3) { transition-delay: 0.2s; opacity: 1; transform: translateY(0); }
+        .reveal-children.visible > *:nth-child(4) { transition-delay: 0.3s; opacity: 1; transform: translateY(0); }
+        .reveal-children.visible > *:nth-child(5) { transition-delay: 0.4s; opacity: 1; transform: translateY(0); }
+        /* Philosophy cards — idêntico à Amanda */
+        .philosophy-card {
+            background: #27273a;
+            color: #fefefe;
+            transition: background 500ms ease, color 500ms ease;
+        }
+        .philosophy-card:hover { background: #5a28b9; color: #fefefe; }
+        .philosophy-card .card-icon { transition: color 500ms ease; color: #ac78ed; }
+        .philosophy-card:hover .card-icon { color: #ded2ff; }
+        .philosophy-card .card-number { transition: opacity 500ms ease, color 500ms ease; color: #ac78ed; }
+        .philosophy-card:hover .card-number { color: #ded2ff; opacity: 0.6; }
+        .philosophy-card p, .philosophy-card li { color: rgba(255,255,255,0.75); }
+        .philosophy-card:hover p, .philosophy-card:hover li { color: rgba(255,255,255,0.9); }
+        .philosophy-card h3 { color: #fefefe; }
+        .philosophy-card:hover h3 { color: #fefefe; }
+        .philosophy-card .label-ui { color: rgba(172,120,237,0.7) !important; }
+        .philosophy-card:hover .label-ui { color: rgba(222,210,255,0.8) !important; }
+        /* Nav */
+        .nav-link { position: relative; }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px; left: 50%; right: 50%;
+            height: 3px; background: #ac78ed;
+            border-radius: 2px;
+            transition: left 0.3s ease, right 0.3s ease;
+        }
+        .nav-link:hover::after { left: 0; right: 0; }
+        /* Gallery scroll */
+        .gallery-scroll { overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+        .gallery-scroll::-webkit-scrollbar { display: none; }
+        .gallery-scroll > * { scroll-snap-align: start; }
+        /* Botões */
+        .btn-pill { border-radius: 999px; transition: background 0.4s ease, color 0.4s ease, transform 0.3s ease; }
+        .btn-pill:hover { transform: scale(1.04); }
+        /* Timeline */
+        .timeline-line { position: absolute; left: 23px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, #ac78ed, transparent); }
+        /* Section gap */
+        .section-gap { padding-top: 160px; padding-bottom: 0; }
+        @media (max-width: 768px) {
+            .section-gap { padding-top: 80px; }
+            .nav-links { display: none !important; }
+            .mobile-menu-btn { display: flex !important; }
+            /* Mobile: remover border-radius gigante */
+            .rounded-organic-lg { border-radius: 28px !important; }
+            .rounded-organic { border-radius: 24px !important; }
+            /* Mobile: sem offset nos cards de problema */
+            .md\:translate-y-8 { transform: none !important; }
+            /* Mobile: flow nodes quebram linha naturalmente */
+            .flow-node { white-space: normal; font-size: 11px; padding: 5px 10px; }
+            /* Mobile: ajuste tamanho hero annotation */
+            .font-hand { font-size: 2rem !important; line-height: 1.1 !important; }
+            /* Mobile: galeria */
+            .gallery-scroll > * { width: 88vw !important; }
+            /* Mobile: padding menor nos cards */
+            .philosophy-card { padding: 28px 24px !important; }
+        }
+        @media (min-width: 769px) {
+            .mobile-menu-btn { display: none !important; }
+            .mobile-nav-panel { display: none !important; }
+        }
+        .annotation-arrow { animation: arrow-bob 2.5s ease-in-out infinite; }
+        @keyframes arrow-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
+        ::selection { background: #5a28b9; color: #fefefe; }
+        /* Garantia badge */
+        .garantia-badge {
+            background: linear-gradient(135deg, rgba(90,40,185,0.15), rgba(172,120,237,0.1));
+            border: 1px solid rgba(172,120,237,0.3);
+            border-radius: 20px;
+            padding: 20px 24px;
+        }
+        /* Flow nodes */
+        .flow-node {
+            background: rgba(90,40,185,0.15);
+            border: 1px solid rgba(90,40,185,0.3);
+            border-radius: 12px;
+            padding: 7px 14px;
+            font-size: 12px;
+            font-weight: 500;
+            color: rgba(172,120,237,0.9);
+            white-space: nowrap;
+        }
+        .flow-arrow { color: rgba(172,120,237,0.35); font-size: 16px; flex-shrink: 0; }
+        /* Comp table */
+        .comp-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        .comp-table thead tr { border-bottom: 2px solid rgba(90,40,185,0.35); }
+        .comp-table th {
+            font-family: 'Inter', sans-serif;
+            font-size: 9px; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.25em;
+            color: rgba(172,120,237,0.55);
+            padding: 20px 24px; text-align: left;
+        }
+        .comp-table th:nth-child(3) { color: #ac78ed; }
+        .comp-table td:nth-child(3), .comp-table th:nth-child(3) {
+            background: rgba(90,40,185,0.06);
+            border-left: 1px solid rgba(90,40,185,0.2);
+        }
+        .comp-table td {
+            padding: 13px 24px; vertical-align: middle;
+            font-size: 13px; color: rgba(254,254,254,0.65);
+            border-bottom: 1px solid rgba(255,255,255,0.05); text-align: left;
+        }
+        .comp-table td:first-child { color: rgba(255,255,255,0.75); }
+        .comp-table td:nth-child(2), .comp-table td:nth-child(3) { text-align: center; }
+        .comp-table tbody tr:hover td { background: rgba(90,40,185,0.07); }
+        .comp-table tbody tr:hover td:nth-child(3) { background: rgba(90,40,185,0.14); }
+        .comp-table tr:last-child td { border-bottom: none; }
+        .comp-table tr.price-row td {
+            border-top: 1px solid rgba(90,40,185,0.25);
+            background: rgba(90,40,185,0.12);
+            padding-top: 16px; padding-bottom: 16px;
+        }
+        .comp-table tr.price-row td:nth-child(3) { background: rgba(90,40,185,0.2); }
+        .comp-table tr.price-row td:first-child {
+            font-size: 12px; font-weight: 600;
+            color: rgba(255,255,255,0.9);
+            text-transform: uppercase; letter-spacing: 0.1em;
+        }
+        .check-c { color: #ac78ed; font-weight: 500; font-size: 16px; }
+        .dash-c { color: rgba(254,254,254,0.2); font-size: 18px; }
+        .val-c { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 18px; color: #ac78ed; }
+        /* nota box */
+        .nota-box {
+            background: rgba(90,40,185,0.08);
+            border-left: 3px solid rgba(90,40,185,0.4);
+            border-radius: 0 12px 12px 0;
+            padding: 14px 18px;
+            font-size: 13px;
+            color: rgba(254,254,254,0.65);
+            line-height: 1.6;
+        }
+        .nota-box strong { color: rgba(172,120,237,0.9); font-weight: 500; }
+        /* Mobile extras */
+        @media (max-width: 640px) {
+            /* Galeria — altura mínima menor */
+            .gallery-scroll .rounded-organic-lg { min-height: 280px !important; }
+            /* Hero metadata strip */
+            .hero-meta { gap: 16px 24px !important; }
+            /* Flow nodes — deixar quebrar em colunas */
+            .flow-nodes-wrap { flex-wrap: wrap !important; row-gap: 6px !important; }
+            /* Cronograma card number menor */
+            .cronograma-num { font-size: 3.5rem !important; }
+            /* CTA section radius */
+            #cta > div { border-radius: 32px !important; padding: 40px 24px !important; }
+            /* Footer wrap */
+            footer .footer-links { flex-direction: column !important; gap: 12px !important; }
+            /* Seção "quem entrega" padding */
+            .quem-entrega { padding: 32px 24px !important; }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- NAVIGATION -->
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-500" style="background: rgba(31,31,35,0.88); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);">
+        <div class="max-w-7xl mx-auto px-6 md:px-10 flex items-center justify-between" style="height:80px;">
+            <div class="flex items-center gap-6">
+                <div class="hidden md:block w-px h-6" style="background:rgba(172,120,237,0.2)"></div>
+                <a href="#hero" class="font-serif italic text-xl tracking-tight" style="color:#ac78ed">Ana | Automações e IA</a>
+            </div>
+            <div class="nav-links hidden md:flex items-center gap-8">
+                <a href="#problema" class="nav-link label-ui transition-colors" style="color:rgba(255,255,255,0.5)">O Problema</a>
+                <a href="#solucao" class="nav-link label-ui transition-colors" style="color:rgba(255,255,255,0.5)">A Solução</a>
+                <a href="#cronograma" class="nav-link label-ui transition-colors" style="color:rgba(255,255,255,0.5)">Cronograma</a>
+                <a href="#investimento" class="nav-link label-ui transition-colors" style="color:rgba(255,255,255,0.5)">Investimento</a>
+                <a href="#cta" class="nav-link label-ui transition-colors" style="color:rgba(255,255,255,0.5)">Próximos Passos</a>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="#cta" class="btn-pill hidden md:inline-block px-6 py-2.5 label-ui" style="background:#5a28b9;color:#fefefe;">Confirmar Plano</a>
+                <button onclick="toggleMobileNav()" class="mobile-menu-btn items-center justify-center w-10 h-10 rounded-full" style="color:#ac78ed">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                        <line x1="3" y1="6" x2="17" y2="6"/><line x1="3" y1="10" x2="17" y2="10"/><line x1="3" y1="14" x2="17" y2="14"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-nav" class="mobile-nav-panel hidden border-t" style="background:rgba(31,31,35,0.97);border-color:rgba(172,120,237,0.15)">
+            <div class="flex flex-col items-center gap-6 py-10 px-6">
+                <a href="#problema" onclick="closeMobileNav()" class="label-ui-lg" style="color:rgba(255,255,255,0.6)">O Problema</a>
+                <a href="#solucao" onclick="closeMobileNav()" class="label-ui-lg" style="color:rgba(255,255,255,0.6)">A Solução</a>
+                <a href="#cronograma" onclick="closeMobileNav()" class="label-ui-lg" style="color:rgba(255,255,255,0.6)">Cronograma</a>
+                <a href="#investimento" onclick="closeMobileNav()" class="label-ui-lg" style="color:rgba(255,255,255,0.6)">Investimento</a>
+                <a href="#cta" onclick="closeMobileNav()" class="label-ui-lg" style="color:rgba(255,255,255,0.6)">Próximos Passos</a>
+                <a href="#cta" onclick="closeMobileNav()" class="btn-pill px-8 py-3 label-ui" style="background:#5a28b9;color:#fefefe;">Confirmar Plano</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section id="hero" class="min-h-screen flex flex-col justify-center px-6 md:px-10 pt-24 pb-16 max-w-7xl mx-auto">
+        <div class="reveal">
+            <p class="label-ui mb-6 md:mb-8" style="color:rgba(172,120,237,0.7)">Proposta Comercial &mdash; Junho 2026</p>
+            <h1 class="font-serif leading-[0.9] tracking-tight mb-8 md:mb-10">
+                <span class="italic block text-[clamp(22px,5vw,72px)]" style="color:rgba(255,255,255,0.5)">Cada Pedido de Alteração,</span>
+                <span class="block text-[clamp(36px,8vw,128px)]" style="color:#fefefe">um Cartão no
+                    <span class="hand-underline" style="color:#ac78ed">Trello
+                        <svg viewBox="0 0 200 14" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                            <path d="M2 10C38 4 85 14 125 6C158 0 185 11 198 5" stroke="#ac78ed" stroke-width="4" stroke-linecap="round"/>
+                        </svg>
+                    </span>
+                </span>
+                <span class="italic block text-[clamp(20px,4vw,56px)]" style="color:rgba(255,255,255,0.35)">automático.</span>
+            </h1>
+        </div>
+        <div class="reveal flex flex-col md:flex-row md:items-end justify-between gap-10 mt-6" style="transition-delay:0.2s;">
+            <p class="font-sans text-base md:text-lg font-light max-w-xl leading-relaxed" style="color:rgba(255,255,255,0.55)">
+                Juliana, aqui está a proposta que estruturei com base no que conversamos — um processo que transforma a gestão de alterações da sua agência.
+            </p>
+            <div class="flex-shrink-0 text-right">
+                <p class="font-hand text-4xl md:text-5xl leading-none" style="color:rgba(172,120,237,0.5)">até 15 horas</p>
+                <p class="font-hand text-4xl md:text-5xl leading-none" style="color:#ac78ed">devolvidas/mês</p>
+                <div class="annotation-arrow mt-3 flex justify-end">
+                    <svg width="24" height="32" fill="none" stroke="#5a28b9" stroke-width="2" stroke-linecap="round"><path d="M12 2v24M5 20l7 8 7-8"/></svg>
+                </div>
+            </div>
+        </div>
+        <div class="reveal hero-meta mt-16 md:mt-20 flex flex-wrap gap-x-12 gap-y-4 border-t pt-8" style="border-color:rgba(172,120,237,0.15);transition-delay:0.35s;">
+            <div>
+                <p class="label-ui mb-1" style="color:rgba(172,120,237,0.5)">Para</p>
+                <p class="font-sans text-sm font-medium">Juliana Trigueiros</p>
+            </div>
+            <div>
+                <p class="label-ui mb-1" style="color:rgba(172,120,237,0.5)">De</p>
+                <p class="font-sans text-sm font-medium">Ana | Automações e IA</p>
+            </div>
+            <div>
+                <p class="label-ui mb-1" style="color:rgba(172,120,237,0.5)">Data</p>
+                <p class="font-sans text-sm font-medium">27 de Junho de 2026</p>
+            </div>
+            <div>
+                <p class="label-ui mb-1" style="color:rgba(172,120,237,0.5)">Prazo de entrega</p>
+                <p class="font-sans text-sm font-medium">15 dias após onboarding</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROBLEMA -->
+    <section id="problema" class="section-gap px-6 md:px-10 max-w-7xl mx-auto">
+        <div class="reveal">
+            <p class="label-ui mb-4" style="color:#5a28b9">01 &mdash; O Problema</p>
+            <h2 class="font-serif italic text-[clamp(28px,6vw,80px)] leading-[0.92] tracking-tight max-w-4xl mb-16" style="color:#fefefe">
+                A produção funciona.<br class="hidden md:block">
+                As revisões
+                <span class="hand-underline" style="color:#ac78ed"> viram caos.
+                    <svg viewBox="0 0 240 14" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                        <path d="M2 8C60 12 120 2 180 8C210 11 228 4 238 7" stroke="#ac78ed" stroke-width="4" stroke-linecap="round"/>
+                    </svg>
+                </span>
+            </h2>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6 reveal-children">
+            <div class="philosophy-card rounded-organic p-8 md:p-10 flex flex-col justify-between min-h-[260px] cursor-default">
+                <div>
+                    <div class="card-icon mb-6">
+                        <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    </div>
+                    <h3 class="font-serif italic text-2xl mb-3">"O pedido chega em todo lugar, menos no lugar certo"</h3>
+                </div>
+                <p class="font-sans text-sm font-light leading-relaxed" style="opacity:0.7">
+                    Uma clínica pede alteração no texto da arte via WhatsApp. Outra manda áudio. Uma terceira manda mensagem num grupo, outra no privado. Cada canal diferente, nenhum organizado.
+                </p>
+            </div>
+            <div class="philosophy-card rounded-organic p-8 md:p-10 flex flex-col justify-between min-h-[260px] cursor-default md:translate-y-8">
+                <div>
+                    <div class="card-icon mb-6">
+                        <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    </div>
+                    <h3 class="font-serif italic text-2xl mb-3">"Pedido perdido. Todo mês, sem exceção."</h3>
+                </div>
+                <p class="font-sans text-sm font-light leading-relaxed" style="opacity:0.7">
+                    Quando a equipe não esquece de cadastrar no Trello, perde tempo. Quando está ocupada, perde o pedido inteiro. Não é falta de cuidado — é a ausência de um canal estruturado.
+                </p>
+            </div>
+            <div class="philosophy-card rounded-organic p-8 md:p-10 flex flex-col justify-between min-h-[260px] cursor-default">
+                <div>
+                    <div class="card-icon mb-6">
+                        <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    </div>
+                    <h3 class="font-serif italic text-2xl mb-3">"A equipe perde horas em tarefas que não geram valor"</h3>
+                </div>
+                <p class="font-sans text-sm font-light leading-relaxed" style="opacity:0.7">
+                    Ler mensagem, entender o que foi pedido, abrir o Trello, cadastrar manualmente — repetido dezenas de vezes por semana. Tempo que deveria estar em criação e atendimento.
+                </p>
+            </div>
+            <div class="philosophy-card rounded-organic p-8 md:p-10 flex flex-col justify-between min-h-[260px] cursor-default md:translate-y-8">
+                <div>
+                    <div class="card-icon mb-6">
+                        <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                    </div>
+                    <h3 class="font-serif italic text-2xl mb-3">"Você não sabe o que está aberto, pendente ou atrasado"</h3>
+                </div>
+                <p class="font-sans text-sm font-light leading-relaxed" style="opacity:0.7">
+                    Sem rastreabilidade, você não tem visibilidade real. Os clientes da agência ficam sem resposta clara, e a sensação de apagar incêndio nunca passa.
+                </p>
+            </div>
+        </div>
+
+        <!-- Objetivo -->
+        <div class="reveal mt-20 rounded-organic-lg p-10 md:p-16" style="background:#27273a;transition-delay:0.1s;">
+            <p class="label-ui mb-6" style="color:#5a28b9">O Objetivo</p>
+            <p class="font-serif italic text-2xl md:text-4xl leading-snug max-w-4xl" style="color:#fefefe">
+                Estruturar, em <strong class="not-italic font-serif" style="color:#ac78ed">15 dias</strong>, um fluxo automatizado que transforma cada pedido de alteração em um cartão organizado no Trello —
+                <strong class="not-italic font-serif" style="color:#ac78ed">sem intervenção da sua equipe</strong>.
+            </p>
+        </div>
+    </section>
+
+    <!-- SOLUÇÃO -->
+    <section id="solucao" class="section-gap px-6 md:px-10 max-w-7xl mx-auto">
+        <div class="reveal">
+            <p class="label-ui mb-4" style="color:#5a28b9">02 &mdash; A Solução</p>
+            <h2 class="font-serif italic text-[clamp(28px,6vw,80px)] leading-[0.92] tracking-tight max-w-5xl mb-6" style="color:#fefefe">
+                <span class="hand-underline" style="color:#ac78ed">2 Planos
+                    <svg viewBox="0 0 180 14" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                        <path d="M2 9C45 2 100 13 145 5C163 1 173 10 178 7" stroke="#ac78ed" stroke-width="4" stroke-linecap="round"/>
+                    </svg>
+                </span>, uma lógica
+            </h2>
+            <p class="font-sans text-lg font-light mb-16" style="color:rgba(255,255,255,0.55);max-width:38rem">
+                O cliente faz o pedido uma vez, no lugar certo, e sua equipe recebe direto na fila de trabalho — sem intermediários, sem retrabalho.
+            </p>
+        </div>
+
+        <!-- O que muda -->
+        <div class="reveal mb-16 rounded-organic-lg p-8 md:p-12" style="background:#27273a;border:1px solid rgba(172,120,237,0.2)">
+            <p class="label-ui mb-6" style="color:#5a28b9">Automatizado no processo. Organizado para a equipe.</p>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div>
+                    <p class="font-serif italic text-lg mb-2" style="color:#ac78ed">Para a equipe</p>
+                    <p class="font-sans font-light text-sm leading-relaxed" style="color:rgba(255,255,255,0.65)">Para de ser secretária do WhatsApp e começa a trabalhar com uma fila clara, priorizada e sem ruído.</p>
+                </div>
+                <div>
+                    <p class="font-serif italic text-lg mb-2" style="color:#ac78ed">Para os seus clientes</p>
+                    <p class="font-sans font-light text-sm leading-relaxed" style="color:rgba(255,255,255,0.65)">Em vez de "manda no WhatsApp", recebem um link com um processo formal — o que eleva a percepção da agência.</p>
+                </div>
+                <div>
+                    <p class="font-serif italic text-lg mb-2" style="color:#ac78ed">Para você</p>
+                    <p class="font-sans font-light text-sm leading-relaxed" style="color:rgba(255,255,255,0.65)">Visibilidade total — quem pediu, o quê, quando e em que status está. Nada se perde.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2 Planos -->
+        <div class="space-y-8 reveal-children">
+
+            <!-- Plano Essencial -->
+            <div class="philosophy-card rounded-organic p-8 md:p-12 cursor-default">
+                <div class="flex flex-col md:flex-row md:items-start gap-6 md:gap-12">
+                    <div class="flex-shrink-0">
+                        <span class="card-number font-serif text-6xl md:text-8xl opacity-20 leading-none">01</span>
+                    </div>
+                    <div class="flex-1">
+                        <p class="label-ui mb-1" style="opacity:0.5;color:inherit">Plano</p>
+                        <h3 class="font-serif italic text-2xl md:text-4xl mb-2 leading-tight">Essencial</h3>
+                        <div class="flex items-baseline gap-3 mb-6">
+                            <span class="font-serif italic text-2xl" style="color:#ac78ed;">R$ 497</span>
+                            <span class="label-ui" style="color:rgba(172,120,237,0.5);">impl.</span>
+                            <span style="color:rgba(255,255,255,0.2);font-size:12px;">+</span>
+                            <span class="font-serif italic text-xl" style="color:rgba(172,120,237,0.8);">R$ 297</span>
+                            <span class="label-ui" style="color:rgba(172,120,237,0.4);">/mês</span>
+                        </div>
+
+                        <!-- Fluxo visual -->
+                        <div class="flow-nodes-wrap flex flex-wrap items-center gap-2 mb-6">
+                            <span class="flow-node">Cliente</span>
+                            <span class="flow-arrow">→</span>
+                            <span class="flow-node">Formulário</span>
+                            <span class="flow-arrow">→</span>
+                            <span class="flow-node">Sistema de integração</span>
+                            <span class="flow-arrow">→</span>
+                            <span class="flow-node" style="color:#ded2ff;border-color:rgba(172,120,237,0.4);">Trello ✦</span>
+                        </div>
+
+                        <p class="font-sans font-light text-sm md:text-base leading-relaxed mb-6 max-w-2xl" style="opacity:0.7">
+                            O cliente acessa um formulário conversacional — uma interface de perguntas simples, uma de cada vez, que garante que nenhum campo fique em branco. Ao final, nosso sistema de integração processa as respostas e cria o cartão no Trello automaticamente, com todos os dados organizados: nome do cliente, tipo de solicitação, data, descrição e anexos.
+                        </p>
+
+                        <div class="nota-box">
+                            <strong>Transparência:</strong> o formulário no plano gratuito comporta até 200 conversas por mês — mais do que suficiente para a maioria das agências. Se o volume ultrapassar esse limite, o formulário pausa até o reinício do ciclo, ou é possível contratar o plano pago da ferramenta (US$ 39/mês) para continuar sem interrupção. Agências com volume maior já partem direto para o Plano Profissional.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Plano Profissional -->
+            <div class="philosophy-card rounded-organic p-8 md:p-12 cursor-default">
+                <div class="flex flex-col md:flex-row md:items-start gap-6 md:gap-12">
+                    <div class="flex-shrink-0">
+                        <span class="card-number font-serif text-6xl md:text-8xl opacity-20 leading-none">02</span>
+                    </div>
+                    <div class="flex-1">
+                        <p class="label-ui mb-1" style="opacity:0.5;color:inherit">Plano</p>
+                        <h3 class="font-serif italic text-2xl md:text-4xl mb-2 leading-tight">Profissional</h3>
+                        <div class="flex items-baseline gap-3 mb-6">
+                            <span class="font-serif italic text-2xl" style="color:#ac78ed;">R$ 897</span>
+                            <span class="label-ui" style="color:rgba(172,120,237,0.5);">impl.</span>
+                            <span style="color:rgba(255,255,255,0.2);font-size:12px;">+</span>
+                            <span class="font-serif italic text-xl" style="color:rgba(172,120,237,0.8);">R$ 397</span>
+                            <span class="label-ui" style="color:rgba(172,120,237,0.4);">/mês</span>
+                        </div>
+
+                        <!-- Fluxo visual -->
+                        <div class="flex flex-wrap items-center gap-2 mb-6">
+                            <span class="flow-node" style="color:#ded2ff;border-color:rgba(172,120,237,0.4);">Formulário da agência</span>
+                            <span class="flow-arrow">→</span>
+                            <span class="flow-node">Sistema de integração</span>
+                            <span class="flow-arrow">→</span>
+                            <span class="flow-node" style="color:#ded2ff;border-color:rgba(172,120,237,0.4);">Trello ✦</span>
+                            <span class="flow-arrow">+</span>
+                            <span class="flow-node" style="color:#ded2ff;border-color:rgba(172,120,237,0.4);">WhatsApp ✦</span>
+                        </div>
+
+                        <p class="font-sans font-light text-sm md:text-base leading-relaxed mb-6 max-w-2xl" style="opacity:0.7">
+                            Tudo do Plano Essencial, com duas diferenças importantes:
+                        </p>
+                        <ul class="space-y-4">
+                            <li class="flex items-start gap-3 font-sans text-sm font-light">
+                                <span class="w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0" style="background:#ac78ed;opacity:0.7"></span>
+                                <span style="opacity:0.8"><strong style="color:#ded2ff;font-weight:500;">Formulário com a cara da sua agência</strong> — no seu domínio, com suas cores e logo. Seus clientes veem só a sua marca, sem menção a ferramentas externas.</span>
+                            </li>
+                            <li class="flex items-start gap-3 font-sans text-sm font-light">
+                                <span class="w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0" style="background:#ac78ed;opacity:0.7"></span>
+                                <span style="opacity:0.8"><strong style="color:#ded2ff;font-weight:500;">Notificação automática no WhatsApp</strong> — assim que uma nova solicitação chega, sua equipe recebe aviso automático. Zero chance de passar despercebido.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ROI -->
+        <div class="reveal mt-20 rounded-organic-lg p-10 md:p-16" style="background:#27273a;transition-delay:0.1s;">
+            <p class="label-ui mb-6" style="color:#5a28b9">O que Muda na Prática</p>
+            <p class="font-serif italic text-xl md:text-3xl leading-snug max-w-4xl mb-10" style="color:#fefefe">
+                Imagine uma semana com o sistema ativo: sua equipe já tem a fila de alterações organizada no Trello — cada cartão com nome do cliente, tipo de pedido, data e descrição. Nenhum pedido perdido no WhatsApp. Nenhum cadastro manual.
+            </p>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div style="border-top:2px solid rgba(172,120,237,0.3);padding-top:20px;">
+                    <p class="font-serif italic text-3xl mb-2" style="color:#ac78ed;">30–60 min</p>
+                    <p class="label-ui mb-2" style="color:rgba(172,120,237,0.5);">por dia devolvidos</p>
+                    <p class="font-sans font-light text-sm" style="color:rgba(255,255,255,0.5);">O cadastro manual passa a ser feito pelo sistema.</p>
+                </div>
+                <div style="border-top:2px solid rgba(172,120,237,0.3);padding-top:20px;">
+                    <p class="font-serif italic text-3xl mb-2" style="color:#ac78ed;">~15h</p>
+                    <p class="label-ui mb-2" style="color:rgba(172,120,237,0.5);">recuperadas por mês</p>
+                    <p class="font-sans font-light text-sm" style="color:rgba(255,255,255,0.5);">O sistema se paga no primeiro mês.</p>
+                </div>
+                <div style="border-top:2px solid rgba(172,120,237,0.3);padding-top:20px;">
+                    <p class="font-serif italic text-3xl mb-2" style="color:#ac78ed;">Zero</p>
+                    <p class="label-ui mb-2" style="color:rgba(172,120,237,0.5);">pedidos perdidos</p>
+                    <p class="font-sans font-light text-sm" style="color:rgba(255,255,255,0.5);">Rastreabilidade total de cada solicitação.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CRONOGRAMA -->
+    <section id="cronograma" class="section-gap">
+        <div class="px-6 md:px-10 max-w-7xl mx-auto">
+            <div class="reveal flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16">
+                <div>
+                    <p class="label-ui mb-4" style="color:#5a28b9">03 &mdash; Cronograma</p>
+                    <h2 class="font-serif italic text-[clamp(28px,6vw,80px)] leading-[0.92] tracking-tight" style="color:#fefefe">
+                        15 dias para
+                        <span class="hand-underline" style="color:#ac78ed">virar a chave
+                            <svg viewBox="0 0 280 14" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                                <path d="M2 7C70 12 140 1 210 9C248 12 268 4 278 6" stroke="#ac78ed" stroke-width="4" stroke-linecap="round"/>
+                            </svg>
+                        </span>
+                    </h2>
+                </div>
+                <div class="hidden md:flex items-center gap-3">
+                    <button onclick="scrollGallery(-1)" class="w-12 h-12 rounded-full border flex items-center justify-center transition-all duration-300" style="border-color:rgba(172,120,237,0.25);color:#ac78ed" onmouseover="this.style.background='#5a28b9';this.style.color='#fefefe'" onmouseout="this.style.background='transparent';this.style.color='#ac78ed'">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 2L4 8l6 6"/></svg>
+                    </button>
+                    <button onclick="scrollGallery(1)" class="w-12 h-12 rounded-full border flex items-center justify-center transition-all duration-300" style="border-color:rgba(172,120,237,0.25);color:#ac78ed" onmouseover="this.style.background='#5a28b9';this.style.color='#fefefe'" onmouseout="this.style.background='transparent';this.style.color='#ac78ed'">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 2l6 6-6 6"/></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="relative">
+            <div class="hidden md:block absolute left-0 top-0 bottom-0 w-20 pointer-events-none" style="background:linear-gradient(to right,#1f1f23,transparent);z-index:10"></div>
+            <div class="hidden md:block absolute right-0 top-0 bottom-0 w-20 pointer-events-none" style="background:linear-gradient(to left,#1f1f23,transparent);z-index:10"></div>
+
+            <div id="timeline-gallery" class="gallery-scroll flex gap-6 px-6 md:px-10 pb-4">
+                <!-- Fase 1 -->
+                <div class="flex-shrink-0 w-[85vw] md:w-[380px]">
+                    <div class="rounded-organic-lg p-8 md:p-10 min-h-[340px] flex flex-col justify-between relative overflow-hidden" style="background:#27273a">
+                        <div class="absolute top-6 right-6">
+                            <span class="label-ui px-4 py-2 rounded-full" style="background:rgba(90,40,185,0.2);color:rgba(172,120,237,0.7);font-size:9px;">D+1</span>
+                        </div>
+                        <div>
+                            <p class="cronograma-num font-serif text-7xl opacity-10 mb-4 leading-none" style="color:#ac78ed">01</p>
+                            <h3 class="font-serif italic text-3xl mb-2" style="color:#fefefe">Onboarding</h3>
+                            <div class="w-12 h-0.5 mb-6" style="background:#5a28b9"></div>
+                        </div>
+                        <ul class="space-y-3">
+                            <li class="flex items-start gap-3 font-sans text-sm font-light" style="color:rgba(255,255,255,0.6)">
+                                <span class="w-1 h-1 rounded-full mt-2 flex-shrink-0" style="background:#ac78ed"></span>
+                                Alinhamento completo do projeto
+                            </li>
+                            <li class="flex items-start gap-3 font-sans text-sm font-light" style="color:rgba(255,255,255,0.6)">
+                                <span class="w-1 h-1 rounded-full mt-2 flex-shrink-0" style="background:#ac78ed"></span>
+                                Mapeamento dos tipos de solicitação
+                            </li>
+                            <li class="flex items-start gap-3 font-sans text-sm font-light" style="color:rgba(255,255,255,0.6)">
+                                <span class="w-1 h-1 rounded-full mt-2 flex-shrink-0" style="background:#ac78ed"></span>
+                                Acesso ao Trello e ferramentas
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Fase 2 -->
+                <div class="flex-shrink-0 w-[85vw] md:w-[380px]">
+                    <div class="rounded-organic-lg p-8 md:p-10 min-h-[340px] flex flex-col justify-between relative overflow-hidden" style="background:#27273a">
+                        <div class="absolute top-6 right-6">
+                            <span class="label-ui px-4 py-2 rounded-full" style="background:rgba(90,40,185,0.2);color:rgba(172,120,237,0.7);font-size:9px;">D+5</span>
+                        </div>
+                        <div>
+                            <p class="font-serif text-7xl opacity-10 mb-4 leading-none" style="color:#ac78ed">02</p>
+                            <h3 class="font-serif italic text-3xl mb-2" style="color:#fefefe">Formulário</h3>
+                            <div class="w-12 h-0.5 mb-6" style="background:#5a28b9"></div>
+                        </div>
+                        <ul class="space-y-3">
+                            <li class="flex items-start gap-3 font-sans text-sm font-light" style="color:rgba(255,255,255,0.6)">
+                                <span class="w-1 h-1 rounded-full mt-2 flex-shrink-0" style="background:#ac78ed"></span>
+                                Campos condicionais por tipo de pedido
+                            </li>
+                            <li class="flex items-start gap-3 font-sans text-sm font-light" style="color:rgba(255,255,255,0.6)">
+                                <span class="w-1 h-1 rounded-full mt-2 flex-shrink-0" style="background:#ac78ed"></span>
+                                Identidade visual aplicada (Plano Pro)
+                            </li>
+                            <li class="flex items-start gap-3 font-sans text-sm font-light" style="color:rgba(255,255,255,0.6)">
+                                <span class="w-1 h-1 rounded-full mt-2 flex-shrink-0" style="background:#ac78ed"></span>
+                                Fluxo aprovado com você
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Fase 3 -->
+                <div class="flex-shrink-0 w-[85vw] md:w-[380px]">
+                    <div class="rounded-organic-lg p-8 md:p-10 min-h-[340px] flex flex-col justify-between relative overflow-hidden" style="background:#27273a">
+                        <div class="absolute top-6 right-6">
+                            <span class="label-ui px-4 py-2 rounded-full" style="background:rgba(90,40,185,0.2);color:rgba(172,120,237,0.7);font-size:9px;">D+10</span>
+                        </div>
+                        <div>
+                            <p class="font-serif text-7xl opacity-10 mb-4 leading-none" style="color:#ac78ed">03</p>
+                            <h3 class="font-serif italic text-3xl mb-2" style="color:#fefefe">Integração</h3>
+                            <div class="w-12 h-0.5 mb-6" style="background:#5a28b9"></div>
+                        </div>
+                        <ul class="space-y-3">
+                            <li class="flex items-start gap-3 font-sans text-sm font-light" style="color:rgba(255,255,255,0.6)">
+                                <span class="w-1 h-1 rounded-full mt-2 flex-shrink-0" style="background:#ac78ed"></span>
+                                Automação formulário → Trello ativa
+                            </li>
+                            <li class="flex items-start gap-3 font-sans text-sm font-light" style="color:rgba(255,255,255,0.6)">
+                                <span class="w-1 h-1 rounded-full mt-2 flex-shrink-0" style="background:#ac78ed"></span>
+                                Notificação WhatsApp configurada (Plano Pro)
+                            </li>
+                            <li class="flex items-start gap-3 font-sans text-sm font-light" style="color:rgba(255,255,255,0.6)">
+                                <span class="w-1 h-1 rounded-full mt-2 flex-shrink-0" style="background:#ac78ed"></span>
+                                Testes iniciais realizados
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Fase 4 -->
+                <div class="flex-shrink-0 w-[85vw] md:w-[380px]">
+                    <div class="rounded-organic-lg p-8 md:p-10 min-h-[340px] flex flex-col justify-between relative overflow-hidden" style="background:#27273a">
+                        <div class="absolute top-6 right-6">
+                            <span class="label-ui px-4 py-2 rounded-full" style="background:rgba(90,40,185,0.2);color:rgba(172,120,237,0.7);font-size:9px;">D+12 a D+14</span>
+                        </div>
+                        <div>
+                            <p class="font-serif text-7xl opacity-10 mb-4 leading-none" style="color:#ac78ed">04</p>
+                            <h3 class="font-serif italic text-3xl mb-2" style="color:#fefefe">Testes</h3>
+                            <div class="w-12 h-0.5 mb-6" style="background:#5a28b9"></div>
+                        </div>
+                        <ul class="space-y-3">
+                            <li class="flex items-start gap-3 font-sans text-sm font-light" style="color:rgba(255,255,255,0.6)">
+                                <span class="w-1 h-1 rounded-full mt-2 flex-shrink-0" style="background:#ac78ed"></span>
+                                Validação com cenários reais da agência
+                            </li>
+                            <li class="flex items-start gap-3 font-sans text-sm font-light" style="color:rgba(255,255,255,0.6)">
+                                <span class="w-1 h-1 rounded-full mt-2 flex-shrink-0" style="background:#ac78ed"></span>
+                                Ajustes finos com sua aprovação
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Fase 5 — Go live -->
+                <div class="flex-shrink-0 w-[85vw] md:w-[380px]">
+                    <div class="rounded-organic-lg p-8 md:p-10 min-h-[340px] flex flex-col justify-between relative overflow-hidden" style="background:#5a28b9">
+                        <div class="absolute top-6 right-6">
+                            <span class="label-ui px-4 py-2 rounded-full" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);font-size:9px;">D+15</span>
+                        </div>
+                        <div>
+                            <p class="font-serif text-7xl opacity-20 mb-4 leading-none">05</p>
+                            <h3 class="font-serif italic text-3xl mb-2" style="color:#fefefe">Go Live ✦</h3>
+                            <div class="w-12 h-0.5 mb-6" style="background:rgba(255,255,255,0.3)"></div>
+                        </div>
+                        <ul class="space-y-3">
+                            <li class="flex items-start gap-3 font-sans text-sm font-light" style="color:rgba(255,255,255,0.7)">
+                                <span class="w-1 h-1 rounded-full mt-2 flex-shrink-0" style="background:rgba(255,255,255,0.5)"></span>
+                                Sistema completo ao vivo
+                            </li>
+                            <li class="flex items-start gap-3 font-sans text-sm font-light" style="color:rgba(255,255,255,0.7)">
+                                <span class="w-1 h-1 rounded-full mt-2 flex-shrink-0" style="background:rgba(255,255,255,0.5)"></span>
+                                Treinamento da equipe
+                            </li>
+                            <li class="flex items-start gap-3 font-sans text-sm font-light" style="color:rgba(255,255,255,0.7)">
+                                <span class="w-1 h-1 rounded-full mt-2 flex-shrink-0" style="background:rgba(255,255,255,0.5)"></span>
+                                Primeiro pedido no Trello — automático
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="flex-shrink-0 w-6 md:w-10"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- QUEM ENTREGA -->
+    <section class="section-gap px-6 md:px-10 max-w-7xl mx-auto">
+        <div class="reveal quem-entrega rounded-organic-lg p-10 md:p-16" style="background:#27273a;">
+            <p class="label-ui mb-6" style="color:#5a28b9">Quem Entrega Isso</p>
+            <div class="flex flex-col md:flex-row gap-10 items-start">
+                <div class="flex-1">
+                    <h2 class="font-serif italic text-[clamp(28px,4vw,52px)] leading-[0.95] mb-6" style="color:#fefefe">Ana Carolina Braga</h2>
+                    <p class="font-sans font-light leading-relaxed mb-4" style="color:rgba(255,255,255,0.65);font-size:15px;">
+                        Gestora de Automações e IA com foco em estruturação e automação comercial para negócios digitais. Já automatizei processos para escritórios de advocacia, consultoras de RH e agências — sempre devolvendo tempo para quem trabalha com criação e atendimento.
+                    </p>
+                    <p class="font-sans font-light leading-relaxed" style="color:rgba(255,255,255,0.5);font-size:14px;">
+                        Nos encontramos no grupo "Agência com IA" por uma razão: esse mercado precisa de processos que acompanhem o volume de trabalho. Meu objetivo é que você sinta o resultado na primeira semana.
+                    </p>
+                </div>
+                <div class="flex flex-col gap-3 flex-shrink-0">
+                    <div style="background:rgba(90,40,185,0.15);border-radius:16px;padding:14px 20px;border:1px solid rgba(90,40,185,0.2);">
+                        <p class="label-ui mb-1" style="color:rgba(172,120,237,0.5);">Instagram</p>
+                        <p class="font-sans text-sm font-medium">@ana.automacoes</p>
+                    </div>
+                    <div style="background:rgba(90,40,185,0.15);border-radius:16px;padding:14px 20px;border:1px solid rgba(90,40,185,0.2);">
+                        <p class="label-ui mb-1" style="color:rgba(172,120,237,0.5);">WhatsApp</p>
+                        <p class="font-sans text-sm font-medium">(71) 9 8502-3516</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- INVESTIMENTO -->
+    <section id="investimento" class="section-gap px-6 md:px-10 max-w-7xl mx-auto">
+        <div class="reveal">
+            <p class="label-ui mb-4" style="color:#5a28b9">04 &mdash; Investimento</p>
+            <h2 class="font-serif italic text-[clamp(28px,6vw,80px)] leading-[0.92] tracking-tight max-w-4xl mb-6" style="color:#fefefe">
+                Condições
+                <span class="hand-underline" style="color:#ac78ed">comerciais
+                    <svg viewBox="0 0 300 14" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                        <path d="M2 10C50 3 120 13 190 5C240 0 270 11 298 7" stroke="#ac78ed" stroke-width="4" stroke-linecap="round"/>
+                    </svg>
+                </span>
+            </h2>
+            <p class="font-sans text-base font-light mb-16 max-w-2xl" style="color:rgba(255,255,255,0.5)">
+                Se a sua equipe perde 40 minutos por dia nesse operacional, são ~15 horas por mês. O sistema se paga no primeiro mês.
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6 reveal-children mb-8">
+            <!-- Plano Essencial -->
+            <div class="rounded-organic-lg p-8 md:p-10 flex flex-col justify-between relative overflow-hidden" style="background:#5a28b9;min-height:320px">
+                <div class="absolute -top-16 -right-16 w-48 h-48 rounded-full" style="background:rgba(172,120,237,0.15)"></div>
+                <div>
+                    <p class="label-ui mb-4" style="color:rgba(255,255,255,0.5)">Plano Essencial</p>
+                    <h3 class="font-serif italic text-2xl md:text-3xl mb-4 leading-tight" style="color:#fefefe">Formulário + integração<br>automática ao Trello</h3>
+                    <ul class="space-y-2 mb-6">
+                        <li class="font-sans text-sm font-light" style="color:rgba(255,255,255,0.75)">✦ Formulário conversacional para os clientes</li>
+                        <li class="font-sans text-sm font-light" style="color:rgba(255,255,255,0.75)">✦ Cartão automático no Trello a cada pedido</li>
+                        <li class="font-sans text-sm font-light" style="color:rgba(255,255,255,0.75)">✦ 1 alteração/mês na estrutura inclusa</li>
+                        <li class="font-sans text-sm font-light" style="color:rgba(255,255,255,0.75)">✦ Suporte por WhatsApp</li>
+                    </ul>
+                </div>
+                <div>
+                    <p class="font-serif italic text-4xl md:text-5xl mb-1" style="color:#fefefe">R$ 497</p>
+                    <p class="font-sans text-xs font-light mb-3" style="color:rgba(255,255,255,0.45);">implementação</p>
+                    <p class="font-serif italic text-2xl" style="color:rgba(255,255,255,0.8);">+ R$ 297<span class="font-sans text-sm font-light" style="color:rgba(255,255,255,0.45);margin-left:6px;">/mês</span></p>
+                </div>
+            </div>
+
+            <!-- Plano Profissional -->
+            <div class="rounded-organic-lg p-8 md:p-10 flex flex-col justify-between relative overflow-hidden" style="background:#2e2250;border:1px solid rgba(172,120,237,0.25);min-height:320px">
+                <div class="absolute -bottom-16 -right-16 w-48 h-48 rounded-full" style="background:rgba(90,40,185,0.12)"></div>
+                <div>
+                    <p class="label-ui mb-4" style="color:rgba(172,120,237,0.6)">Plano Profissional</p>
+                    <h3 class="font-serif italic text-2xl md:text-3xl mb-4 leading-tight" style="color:#fefefe">Formulário da agência<br>+ notificação WhatsApp</h3>
+                    <ul class="space-y-2 mb-6">
+                        <li class="font-sans text-sm font-light" style="color:rgba(255,255,255,0.65)">✦ Formulário com identidade visual da agência</li>
+                        <li class="font-sans text-sm font-light" style="color:rgba(255,255,255,0.65)">✦ Cartão automático no Trello a cada pedido</li>
+                        <li class="font-sans text-sm font-light" style="color:rgba(255,255,255,0.65)">✦ Notificação automática no WhatsApp</li>
+                        <li class="font-sans text-sm font-light" style="color:rgba(255,255,255,0.65)">✦ 2 alterações/mês na estrutura inclusas</li>
+                        <li class="font-sans text-sm font-light" style="color:rgba(255,255,255,0.65)">✦ Suporte por WhatsApp</li>
+                    </ul>
+                </div>
+                <div>
+                    <p class="font-serif italic text-4xl md:text-5xl mb-1" style="color:#fefefe">R$ 897</p>
+                    <p class="font-sans text-xs font-light mb-3" style="color:rgba(255,255,255,0.35);">implementação</p>
+                    <p class="font-serif italic text-2xl" style="color:#ac78ed">+ R$ 397<span class="font-sans text-sm font-light" style="color:rgba(172,120,237,0.5);margin-left:6px;">/mês</span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Garantia + Pagamento -->
+        <div class="reveal grid md:grid-cols-2 gap-6">
+            <div class="garantia-badge">
+                <p class="label-ui mb-3" style="color:rgba(172,120,237,0.6)">Garantia</p>
+                <p class="font-serif italic text-xl mb-2" style="color:#fefefe;">30 dias de garantia total</p>
+                <p class="font-sans font-light text-sm leading-relaxed" style="color:rgba(255,255,255,0.6)">Se o fluxo não estiver funcionando como acordado, devolvemos o valor da implementação. Sem burocracia.</p>
+            </div>
+            <div style="background:#27273a;border-radius:20px;padding:20px 24px;">
+                <p class="label-ui mb-3" style="color:rgba(172,120,237,0.6)">A mensalidade cobre</p>
+                <p class="font-sans font-medium text-sm mb-2" style="color:#fefefe;">Monitoramento · Manutenção · Suporte</p>
+                <p class="font-sans font-light text-sm leading-relaxed" style="color:rgba(255,255,255,0.55)">Monitoramento contínuo do fluxo, manutenção preventiva e as alterações mensais inclusas. Pagamento por Pix ou cartão (parcelamento disponível para implementação).</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section id="cta" class="section-gap px-6 md:px-10 max-w-7xl mx-auto pb-40">
+        <div class="reveal" style="background:linear-gradient(160deg,#2e2250,#1f1f23);border-radius:64px;padding:64px 48px;border:1px solid rgba(90,40,185,0.2);text-align:center;">
+            <p class="label-ui mb-6" style="color:#5a28b9">05 &mdash; Próximos Passos</p>
+            <h2 class="font-serif text-[clamp(36px,5vw,72px)] leading-[0.9] tracking-tight mb-6">
+                <span style="color:#fefefe">Responda com</span><br>
+                <span class="font-hand text-[clamp(44px,6vw,88px)]" style="color:#ac78ed">"Essencial" ou "Pro"</span>
+            </h2>
+            <p class="font-sans font-light text-base md:text-lg mb-12 max-w-xl mx-auto" style="color:rgba(255,255,255,0.55)">
+                Eu envio o contrato nas próximas 2 horas. Em 15 dias, sua equipe tem um processo organizado — sem pedido perdido, sem WhatsApp caótico, sem cadastro manual.
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+                <a href="https://wa.me/5571985023516?text=Ol%C3%A1%20Ana%2C%20quero%20confirmar%20o%20Plano%20Essencial!" target="_blank"
+                   class="btn-pill px-8 py-4 font-sans font-medium text-sm" style="background:#27273a;color:#ded2ff;border:1px solid rgba(90,40,185,0.3);">
+                    ✦ Plano Essencial — R$ 497
+                </a>
+                <a href="https://wa.me/5571985023516?text=Ol%C3%A1%20Ana%2C%20quero%20confirmar%20o%20Plano%20Profissional!" target="_blank"
+                   class="btn-pill px-8 py-4 font-sans font-medium text-sm" style="background:#5a28b9;color:#ffffff;">
+                    ✦ Plano Profissional — R$ 897
+                </a>
+            </div>
+
+            <div style="background:rgba(90,40,185,0.1);border-radius:20px;padding:16px 24px;display:inline-block;border:1px solid rgba(90,40,185,0.2);">
+                <p class="font-sans font-light text-sm" style="color:rgba(255,255,255,0.55)">
+                    Tenho uma vaga aberta para início em julho.<br>
+                    <strong style="color:#ac78ed;">Confirmações após o dia 10 entram na fila de agosto.</strong>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="px-6 md:px-10 py-16 border-t max-w-7xl mx-auto" style="border-color:rgba(172,120,237,0.1);">
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+            <div>
+                <p class="font-serif italic text-2xl mb-2" style="color:#ac78ed;">Ana | Automações e IA</p>
+                <p class="font-sans font-light text-xs" style="color:rgba(255,255,255,0.35)">Gestora de Automações e IA · Salvador, BA</p>
+            </div>
+            <div class="flex flex-wrap gap-x-8 gap-y-3">
+                <a href="https://www.anaautomacoes.com.br" target="_blank" class="label-ui transition-colors" style="color:rgba(255,255,255,0.35)">www.anaautomacoes.com.br</a>
+                <a href="https://instagram.com/ana.automacoes" target="_blank" class="label-ui transition-colors" style="color:rgba(255,255,255,0.35)">@ana.automacoes</a>
+                <a href="mailto:anabraga.automacoes@gmail.com" class="label-ui transition-colors" style="color:rgba(255,255,255,0.35)">anabraga.automacoes@gmail.com</a>
+                <a href="https://wa.me/5571985023516" target="_blank" class="label-ui transition-colors" style="color:rgba(255,255,255,0.35)">WhatsApp</a>
+            </div>
+        </div>
+        <div class="mt-8 pt-8 border-t flex flex-col md:flex-row justify-between gap-3" style="border-color:rgba(255,255,255,0.04);">
+            <p class="label-ui" style="color:rgba(255,255,255,0.2);">Proposta válida até 12 de julho de 2026</p>
+            <p class="label-ui" style="color:rgba(255,255,255,0.2);">Documento confidencial · Uso exclusivo de Juliana Trigueiros</p>
+        </div>
+    </footer>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(el => { if (el.isIntersecting) el.target.classList.add('visible'); });
+        }, { threshold: 0.08 });
+        document.querySelectorAll('.reveal, .reveal-children').forEach(el => observer.observe(el));
+
+        function toggleMobileNav() { document.getElementById('mobile-nav').classList.toggle('hidden'); }
+        function closeMobileNav() { document.getElementById('mobile-nav').classList.add('hidden'); }
+
+        window.addEventListener('scroll', () => {
+            document.getElementById('navbar').style.boxShadow = window.scrollY > 40 ? '0 1px 0 rgba(172,120,237,0.1)' : 'none';
+        });
+
+        function scrollGallery(dir) {
+            const g = document.getElementById('timeline-gallery');
+            g.scrollBy({ left: dir * 400, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
